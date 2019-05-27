@@ -16,22 +16,22 @@ public class Ecc {
   public Ecc() {
     
   }
-  public static ArrayList<Pair<Point, Point>> encrypt(byte[] bytes, Point publicKey) {
+  public static ArrayList<Pair<Point, Point>> encrypt(int[] bytes, Point publicKey) {
     ArrayList<Pair<Point, Point>> points = new ArrayList<Pair<Point, Point>>(bytes.length);
-    for(byte b : bytes) {
-      int c = b + 128;
+    for(int c : bytes) {
+      //int c = b + 128;
       Point p = new Point(Constant.fa[c], Constant.fb[c]);
       points.add(p.encrypt(publicKey));
     }
     return points;
   }
   
-  public static byte[] decrypt(ArrayList<Pair<Point, Point>> cipher, int secretKey) {
-    byte[] bytes = new byte[cipher.size()];
+  public static int[] decrypt(ArrayList<Pair<Point, Point>> cipher, int secretKey) {
+    int[] bytes = new int[cipher.size()];
     int pt = 0;
     for(Pair<Point, Point> p : cipher) {
       Point plain = Point.decrypt(p, secretKey);
-      bytes[pt++] = (byte) (plain.x / Constant.k - 128);
+      bytes[pt++] = (int) (plain.x / Constant.k);
     }
     return bytes;
   }
