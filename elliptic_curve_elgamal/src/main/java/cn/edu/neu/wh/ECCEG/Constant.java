@@ -1,3 +1,4 @@
+package cn.edu.neu.wh.ECCEG;
 
 import java.util.Random;
 
