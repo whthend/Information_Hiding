@@ -7,6 +7,7 @@ import cn.edu.neu.wh.ECCEG.Pair;
 import cn.edu.neu.wh.ECCEG.Point;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 public class eccegTest extends TestCase {
     private Ecc ecc;
@@ -14,7 +15,9 @@ public class eccegTest extends TestCase {
 
     private void processTest() {
         //BigInteger[][] massege1 = {{new int(20), new BigInteger("12")}, {new BigInteger("12"), new BigInteger("20")}};
-        int[][] massege1 = {{20, 12}, {12, 20}};
+        int massege1 = 22;
+        int massege2 = 12;
+
         System.out.println("========================================");
         System.out.println("ECCEG key generation");
 
@@ -23,23 +26,32 @@ public class eccegTest extends TestCase {
         System.out.println("the private key  : " + key.second);
 
         System.out.println("========================================");
-        System.out.println("Test paillier functionality");
+        System.out.println("Encrypt Test");
 
-        BigInteger[][] em1 = ecc.Encryption(massege1);
-        for (int i = 0; i< em1.length; i++){
-            for (int j = 0; j < em1[i].length; j++){
-                System.out.println(em1[i][j]);
-            }
-        }
+        Pair<Point, Point> cipher1 = ecc.encrypt(massege1, key.first);
+        System.out.println(cipher1.first.x + " " + cipher1.first.y + " " + cipher1.second.x + " " + cipher1.second.y);
+
         System.out.println("========================================");
         System.out.println("Test Decode");
 
-        BigInteger[][] dm1 = paillier.Decryption(em1);
-        for (int i = 0; i< dm1.length; i++){
-            for (int j = 0; j < dm1[i].length; j++){
-                System.out.println(dm1[i][j].toString());
-            }
-        }
+        int demassege1;
+        demassege1 = ecc.decrypt(cipher1, key.second);
+        System.out.println("解密：" + demassege1);
+
+        System.out.println("========================================");
+        System.out.println("Encrypt Test 2");
+
+        Pair<Point, Point> cipher2 = ecc.encrypt(massege2, key.first);
+        System.out.println(cipher2.first.x + " " + cipher2.first.y + " " + cipher2.second.x + " " + cipher2.second.y);
+
+        System.out.println("========================================");
+        System.out.println("Decode Test 2");
+
+        int demassege2;
+        demassege1 = ecc.decrypt(cipher2, key.second);
+        System.out.println("解密：" + demassege1);
+
+/*
 
         System.out.println("========================================");
         System.out.println("Test Mod 256");
@@ -49,13 +61,13 @@ public class eccegTest extends TestCase {
                 System.out.println(mmod1[i][j].toString());
             }
         }
-
+*/
         System.out.println("========================================");
         System.out.println("同态测试");
+        Pair<Point, Point> ttest = ecc.cipher_add(cipher1,cipher2);
+        System.out.println(ttest.first.x + " " + ttest.first.y + " " + ttest.second.x + " " + ttest.second.y);
+        System.out.println("同态解密20+12："+ ecc.decrypt(ttest, key.second));
 
-        BigInteger emmul = paillier.cipher_mul(em1[0][0], em1[0][1]);
-        System.out.println(emmul.toString());
-        System.out.println(paillier.Decryption(emmul).toString());
 
     }
 
